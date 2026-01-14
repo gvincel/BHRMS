@@ -1,0 +1,9 @@
+.active-tenant {
+    color: #065f46;
+    font-weight: bold;
+}
+
+.inactive-tenant {
+    color: #b91c1c;
+    font-weight: bold;
+}
