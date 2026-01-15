@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings</title>
+  <link rel="stylesheet" href="set.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo">Boarding House</div>
+      <ul class="menu">
+        <li><a href="index.html">Tenants</a></li>
+        <li><a href="maintenance.html">Maintenance Request</a></li>
+        <li><a href="payments.html">Payments</a></li>
+        <li><a href="rooms.html">Rooms</a></li>
+        <li class="active"><a href="settings.html">Settings</a></li>
+        <li class="logout"><a href="#">Logout</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main content -->
+    <main class="main">
+      <div class="topbar">
+        <h1>Settings</h1>
+        <div class="profile">Admin</div>
+      </div>
+
+      <!-- Personal Information Form -->
+      <div class="table-section">
+        <h2>Personal Information</h2>
+        <form class="settings-form">
+          <label for="name">Full Name</label>
+          <input type="text" id="name" placeholder="John Doe">
+
+          <label for="email">Email</label>
+          <input type="email" id="email" placeholder="john@example.com">
+
+          <label for="phone">Phone Number</label>
+          <input type="text" id="phone" placeholder="09123456789">
+
+          <button type="submit">Update Info</button>
+        </form>
+      </div>
+
+      <!-- Change Password Form -->
+      <div class="table-section" style="margin-top: 30px;">
+        <h2>Change Password</h2>
+        <form class="settings-form">
+          <label for="current-password">Current Password</label>
+          <input type="password" id="current-password" placeholder="Enter current password">
+
+          <label for="new-password">New Password</label>
+          <input type="password" id="new-password" placeholder="Enter new password">
+
+          <label for="confirm-password">Confirm New Password</label>
+          <input type="password" id="confirm-password" placeholder="Confirm new password">
+
+          <button type="submit">Change Password</button>
+        </form>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

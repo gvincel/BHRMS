@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maintenance Requests</title>
+  <link rel="stylesheet" href="ment.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo">Boarding House</div>
+      <ul class="menu">
+        <li><a href="index.html">Tenants</a></li>
+        <li class="active"><a href="maintenance.html">Maintenance Request</a></li>
+        <li><a href="payments.html">Payments</a></li>
+        <li><a href="rooms.html">Rooms</a></li>
+        <li><a href="settings.html">Settings</a></li>
+        <li class="logout"><a href="#">Logout</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main content -->
+    <main class="main">
+      <div class="topbar">
+        <h1>Maintenance Requests</h1>
+        <div class="profile">Admin</div>
+      </div>
+
+      <!-- Form to submit new request -->
+      <div class="cards">
+        <div class="card">
+          <h3>Submit a New Request</h3>
+          <form class="maintenance-form">
+            <label for="tenant">Tenant Name:</label>
+            <input type="text" id="tenant" name="tenant" placeholder="Enter tenant name" required>
+
+            <label for="room">Room Number:</label>
+            <input type="text" id="room" name="room" placeholder="Enter room number" required>
+
+            <label for="issue">Issue Description:</label>
+            <textarea id="issue" name="issue" placeholder="Describe the issue" required></textarea>
+
+            <button type="submit">Submit Request</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Table showing requests -->
+      <div class="table-section">
+        <h2>Submitted Requests</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Tenant</th>
+              <th>Room</th>
+              <th>Issue</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>John Doe</td>
+              <td>101</td>
+              <td>Leaking faucet</td>
+              <td class="pending">Pending</td>
+            </tr>
+            <tr>
+              <td>Jane Smith</td>
+              <td>102</td>
+              <td>Air conditioner not working</td>
+              <td class="paid">Completed</td>
+            </tr>
+            <tr>
+              <td>Mark Wilson</td>
+              <td>103</td>
+              <td>Broken window</td>
+              <td class="pending">Pending</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

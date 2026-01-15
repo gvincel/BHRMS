@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Sidebar</title>
+  <link rel="stylesheet" href="tdash.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo">Boarding House</div>
+      <ul class="menu">
+        <li class="active"><a href="#">Tenants</a></li>
+        <li><a href="#">Maintenance Request</a></li>
+        <li><a href="#">Payments</a></li>
+        <li><a href="#">Rooms</a></li>
+        <li><a href="#">Settings</a></li>
+        <li class="logout"><a href="#">Logout</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main content -->
+    <main class="main">
+      <div class="topbar">
+        <h1>Dashboard</h1>
+        <div class="profile">Admin</div>
+      </div>
+
+      <div class="cards">
+        <div class="card">
+          <h3>Total Tenants</h3>
+          <p>45</p>
+        </div>
+        <div class="card">
+          <h3>Pending Requests</h3>
+          <p>12</p>
+        </div>
+        <div class="card">
+          <h3>Payments Received</h3>
+          <p>30</p>
+        </div>
+      </div>
+
+      <div class="table-section">
+        <h2>Tenant List</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Room</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>John Doe</td>
+              <td>101</td>
+              <td class="paid">Paid</td>
+            </tr>
+            <tr>
+              <td>Jane Smith</td>
+              <td>102</td>
+              <td class="pending">Pending</td>
+            </tr>
+            <tr>
+              <td>Mark Wilson</td>
+              <td>103</td>
+              <td class="paid">Paid</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payments</title>
+  <link rel="stylesheet" href="pay.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo">Boarding House</div>
+      <ul class="menu">
+        <li><a href="index.html">Tenants</a></li>
+        <li><a href="maintenance.html">Maintenance Request</a></li>
+        <li class="active"><a href="payments.html">Payments</a></li>
+        <li><a href="rooms.html">Rooms</a></li>
+        <li><a href="settings.html">Settings</a></li>
+        <li class="logout"><a href="#">Logout</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main content -->
+    <main class="main">
+      <div class="topbar">
+        <h1>Payments</h1>
+        <div class="profile">Admin</div>
+      </div>
+
+      <!-- Cards summary -->
+      <div class="cards">
+        <div class="card">
+          <h3>Total Payments</h3>
+          <p>₱120,000</p>
+        </div>
+        <div class="card">
+          <h3>Pending Payments</h3>
+          <p>₱15,000</p>
+        </div>
+        <div class="card">
+          <h3>Completed Payments</h3>
+          <p>₱105,000</p>
+        </div>
+      </div>
+
+      <!-- Table of payments -->
+      <div class="table-section">
+        <h2>Payment Records</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Tenant</th>
+              <th>Room</th>
+              <th>Amount</th>
+              <th>Status</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>John Doe</td>
+              <td>101</td>
+              <td>₱5,000</td>
+              <td class="paid">Paid</td>
+              <td>2026-01-10</td>
+            </tr>
+            <tr>
+              <td>Jane Smith</td>
+              <td>102</td>
+              <td>₱5,000</td>
+              <td class="pending">Pending</td>
+              <td>2026-01-12</td>
+            </tr>
+            <tr>
+              <td>Mark Wilson</td>
+              <td>103</td>
+              <td>₱5,000</td>
+              <td class="paid">Paid</td>
+              <td>2026-01-08</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
