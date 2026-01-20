@@ -1,0 +1,238 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+:root {
+  --bg-main: #152744;
+  --bg-light: #367591;
+  --primary: #0f8f73; /* updated: slightly darker, balanced */
+  --accent: #9dfdc7;
+  --white: #ffffff;
+  --text-dark: #f0f4f8;
+  --text-muted: #c0d6d9;
+  --success: #2e7d32;
+  --warning: #b45309;
+}
+
+body {
+  background: var(--bg-main);
+  color: var(--text-dark);
+}
+
+.container {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* SIDEBAR — GRADIENT */
+.sidebar {
+  width: 260px;
+  background: linear-gradient(180deg, var(--bg-main), var(--primary));
+  color: var(--white);
+  padding: 30px 20px;
+}
+
+.logo {
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 40px;
+  letter-spacing: 1px;
+}
+
+.menu {
+  list-style: none;
+}
+
+.menu li {
+  padding: 14px 18px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.menu li:hover {
+  background-color: rgba(255, 255, 255, 0.18);
+  transform: translateX(6px);
+}
+
+.menu .active {
+  background-color: rgba(255, 255, 255, 0.28);
+}
+
+.menu a {
+  color: var(--white);
+  text-decoration: none;
+  font-size: 15px;
+  display: block;
+}
+
+.menu .logout {
+  margin-top: 45px;
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.menu .logout:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* MAIN */
+.main {
+  flex: 1;
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+}
+
+/* TOPBAR */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(21, 39, 68, 0.75);
+  padding: 18px 24px;
+  border-radius: 14px;
+  margin-bottom: 30px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.topbar h1 {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+/* PROFILE */
+.profile {
+  background: var(--primary);
+  color: var(--white);
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 24px;
+  margin-bottom: 35px;
+}
+
+/* CARDS */
+.card {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 26px;
+  border-radius: 18px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: var(--primary);
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.12);
+}
+
+.card h3 {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 14px;
+}
+
+.card p {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+/* TABLE */
+.table-section {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 26px;
+  border-radius: 18px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+.table-section h2 {
+  font-size: 18px;
+  margin-bottom: 18px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table thead {
+  background: var(--primary);
+  color: var(--white);
+}
+
+table th,
+table td {
+  padding: 16px;
+  font-size: 14px;
+}
+
+table tbody tr {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  transition: background 0.2s;
+}
+
+table tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.paid {
+  color: var(--success);
+  font-weight: 600;
+}
+
+.pending {
+  color: var(--warning);
+  font-weight: 600;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .sidebar {
+    display: none;
+  }
+
+  .main {
+    padding: 20px;
+  }
+
+  .cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+.menu a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.menu a i {
+    width: 18px;
+    text-align: center;
+}
