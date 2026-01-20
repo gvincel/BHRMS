@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expenses</title>
+    <link rel="stylesheet" href="dash.css">
+</head>
+<body>
+
+<div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h2 class="logo">BoardingHouse</h2>
+        <ul class="menu">
+            <li>Dashboard</li>
+            <li>Rooms</li>
+            <li>Tenants</li>
+            <li>Payments</li>
+            <li class="active">Expenses</li>
+            <li>Maintenance</li>
+            <li>Reports</li>
+            <li>Settings</li>
+            <li class="logout">Logout</li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Top Bar -->
+        <header class="topbar">
+            <h1>Expenses</h1>
+            <div class="profile">Admin</div>
+        </header>
+
+        <!-- Expense Table -->
+        <section class="table-section">
+
+            <!-- Title + Add Button -->
+            <div class="table-header">
+                <h2>Expense Records</h2>
+                <button class="add-btn">+ Add Expense</button>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Expense Type</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>2025-12-01</td>
+                        <td>Electricity</td>
+                        <td>Monthly electric bill</td>
+                        <td>₱6,500</td>
+                        <td class="expense-paid">Paid</td>
+                        <td>
+                            <button class="edit-btn">Edit</button>
+                            <button class="delete-btn">Delete</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>2025-12-05</td>
+                        <td>Water</td>
+                        <td>Water utility bill</td>
+                        <td>₱2,300</td>
+                        <td class="expense-paid">Paid</td>
+                        <td>
+                            <button class="edit-btn">Edit</button>
+                            <button class="delete-btn">Delete</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>2025-12-08</td>
+                        <td>Maintenance</td>
+                        <td>Pipe repair (Room 104)</td>
+                        <td>₱3,200</td>
+                        <td class="expense-pending">Pending</td>
+                        <td>
+                            <button class="edit-btn">Edit</button>
+                            <button class="delete-btn">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </section>
+    </main>
+</div>
+
+</body>
+</html>

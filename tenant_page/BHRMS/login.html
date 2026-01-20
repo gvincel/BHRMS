@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" href="login.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+
+    <title>Tenant & Admin Login</title>
+  </head>
+
+  <body>
+    <div class="container" id="container">
+
+      <!-- ================= TENANT LOGIN (LEFT) ================= -->
+      <div class="form-container sign-in">
+        <form action="login.php" method="POST">
+          <h1>Tenant Login</h1>
+
+          <div class="social-icons">
+            <a href="#" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
+            <a href="#" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
+            <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
+            <a href="#" class="icon"><i class="fa-brands fa-linkedin"></i></a>
+          </div>
+
+          <span>or use your tenant email</span>
+
+          <input type="email" name="email" placeholder="Tenant Email" required />
+          <input type="password" name="password" placeholder="Password" required />
+
+          <button type="submit">Login as Tenant</button>
+        </form>
+      </div>
+
+      <!-- ================= ADMIN LOGIN (RIGHT) ================= -->
+      <div class="form-container sign-up">
+        <form action="admin_login.php" method="POST">
+          <h1>Admin Login</h1>
+
+          <div class="social-icons">
+            <a href="#" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
+            <a href="#" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
+            <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
+            <a href="#" class="icon"><i class="fa-brands fa-linkedin"></i></a>
+          </div>
+
+          <span>or use your admin email</span>
+
+          <input type="email" name="email" placeholder="Admin Email" required />
+          <input type="password" name="password" placeholder="Password" required />
+
+          <button type="submit">Login as Admin</button>
+        </form>
+      </div>
+
+      <!-- ================= TOGGLE SECTION ================= -->
+      <div class="toggle-container">
+        <div class="toggle">
+
+          <!-- Switch to TENANT -->
+          <div class="toggle-panel toggle-left">
+            <h1>Tenant Access</h1>
+            <p>Login as a tenant to manage your rentals</p>
+            <button class="hidden" id="login">Tenant Login</button>
+          </div>
+
+          <!-- Switch to ADMIN -->
+          <div class="toggle-panel toggle-right">
+            <h1>Admin Access</h1>
+            <p>Login as admin to manage the system</p>
+            <button class="hidden" id="register">Admin Login</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="login.js"></script>
+  </body>
+</html>
