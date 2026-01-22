@@ -23,7 +23,7 @@ $user_data = $user_result->fetch_assoc();
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile'])) {
     $full_name = trim($_POST['full_name']);
     
-    $update_sql = "UPDATE users SET full_name = ? WHERE user_id = ?";
+    $update_sql = "UPDATE user s SET full_name = ? WHERE user_id = ?";
     $update_stmt = $conn->prepare($update_sql);
     $update_stmt->bind_param("si", $full_name, $user_id);
     

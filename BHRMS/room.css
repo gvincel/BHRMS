@@ -23,12 +23,12 @@
     background-color: #1e40af;
 }
 
-.add-room-container {
+.add-btn-container {
     margin-bottom: 15px;
     text-align: right;
 }
 
-.add-room-btn {
+.add-btn {
     padding: 8px 16px;
     background-color: #10b981;
     color: #fff;
@@ -39,7 +39,7 @@
     transition: background 0.3s;
 }
 
-.add-room-btn:hover {
+.add-btn:hover {
     background-color: #059669;
 }
 
@@ -98,7 +98,7 @@
 }
 
 .modal-content form button:hover {
-    background-color: #e2e2e2;
+    background-color: var(--success);
 }
 
 .close {

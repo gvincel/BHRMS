@@ -36,6 +36,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_expense'])) {
     $stmt->close();
 }
 
+// Handle Update Expense
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_expense'])) {
+    $expense_id = (int)$_POST['expense_id'];
+    $expense_date = $_POST['expense_date'];
+    $expense_type = trim($_POST['expense_type']);
+    $description = trim($_POST['description']);
+    $amount = (float)$_POST['amount'];
+    $status = $_POST['status'];
+
+    $update_sql = "UPDATE expenses SET expense_date=?, expense_type=?, description=?, amount=?, status=? WHERE expense_id=?";
+    $stmt = $conn->prepare($update_sql);
+    $stmt->bind_param("sssdsd", $expense_date, $expense_type, $description, $amount, $status, $expense_id);
+
+    if ($stmt->execute()) {
+        $message = "Expense updated successfully!";
+        $message_type = "success";
+        header("Location: expenses.php?message=" . urlencode($message) . "&type=" . $message_type);
+        exit();
+    } else {
+        $message = "Error updating expense: " . $conn->error;
+        $message_type = "error";
+    }
+    $stmt->close();
+}
+
 // Handle Delete Expense
 if (isset($_GET['delete_id'])) {
     $delete_id = (int)$_GET['delete_id'];
@@ -76,63 +101,38 @@ $expenses_query = $conn->query("SELECT * FROM expenses ORDER BY expense_date DES
             align-items: center;
             margin-bottom: 20px;
         }
+        .add-btn, .edit-btn, .delete-btn {
+            text-decoration: none;
+            display: inline-block;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
         .add-btn {
             background-color: #10b981;
             color: white;
             padding: 8px 16px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
             font-weight: bold;
-            transition: background 0.3s;
-            text-decoration: none;
-            display: inline-block;
+            border: none;
         }
-        .add-btn:hover {
-            background-color: #059669;
-            color: white;
-        }
+        .add-btn:hover { background-color: #059669; }
         .edit-btn {
             padding: 6px 12px;
             background-color: #2563eb;
             color: #fff;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background 0.3s;
-            margin-right: 5px;
-            text-decoration: none;
-            display: inline-block;
             font-size: 14px;
+            margin-right: 5px;
         }
-        .edit-btn:hover {
-            background-color: #1e40af;
-            color: white;
-        }
+        .edit-btn:hover { background-color: #1e40af; }
         .delete-btn {
             padding: 6px 12px;
             background-color: #dc2626;
             color: #fff;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background 0.3s;
-            text-decoration: none;
-            display: inline-block;
             font-size: 14px;
         }
-        .delete-btn:hover {
-            background-color: #b91c1c;
-            color: white;
-        }
-        .expense-paid {
-            color: #10b981;
-            font-weight: bold;
-        }
-        .expense-pending {
-            color: #d97706;
-            font-weight: bold;
-        }
+        .delete-btn:hover { background-color: #b91c1c; }
+        .expense-paid { color: #10b981; font-weight: bold; }
+        .expense-pending { color: #d97706; font-weight: bold; }
         .modal {
             display: none;
             position: fixed;
@@ -142,30 +142,22 @@ $expenses_query = $conn->query("SELECT * FROM expenses ORDER BY expense_date DES
             width: 100%;
             height: 100%;
             background-color: rgba(0,0,0,0.4);
-            overflow-y: auto; /* <-- allow scrolling if content too tall */
-            padding: 20px; /* <-- ensures spacing on smaller screens */
+            overflow-y: auto;
+            padding: 20px;
             box-sizing: border-box;
         }
-
-.modal-content {
-    background-color: #fff;
-    margin: 50px auto; /* margin-top now smaller and fixed for scroll */
-    padding: 20px;
-    border-radius: 10px;
-    width: 400px;
-    max-width: 100%; /* responsive on mobile */
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    color: black;
-}
-
-        .modal-content h2 {
-            margin-bottom: 15px;
+        .modal-content {
+            background-color: #fff;
+            margin: 50px auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 400px;
+            max-width: 100%;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            color: black;
         }
-        .modal-content form label {
-            display: block;
-            margin-top: 10px;
-            font-weight: bold;
-        }
+        .modal-content h2 { margin-bottom: 15px; }
+        .modal-content form label { display: block; margin-top: 10px; font-weight: bold; }
         .modal-content form input,
         .modal-content form select,
         .modal-content form textarea {
@@ -186,38 +178,13 @@ $expenses_query = $conn->query("SELECT * FROM expenses ORDER BY expense_date DES
             cursor: pointer;
             font-weight: bold;
         }
-        .modal-content form button:hover {
-            background-color: #059669;
-        }
-        .close {
-            float: right;
-            font-size: 24px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .message {
-            padding: 12px;
-            margin-bottom: 20px;
-            border-radius: 6px;
-            text-align: center;
-        }
-        .success {
-            background-color: #d1fae5;
-            color: #065f46;
-            border: 1px solid #a7f3d0;
-        }
-        .error {
-            background-color: #fee2e2;
-            color: #b91c1c;
-            border: 1px solid #fecaca;
-        }
-        .action-buttons {
-            display: flex;
-            gap: 5px;
-        }
-        .action-buttons a {
-            text-decoration: none;
-        }
+        .modal-content form button:hover { background-color: #059669; }
+        .close { float: right; font-size: 24px; font-weight: bold; cursor: pointer; }
+        .message { padding: 12px; margin-bottom: 20px; border-radius: 6px; text-align: center; }
+        .success { background-color: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
+        .error { background-color: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
+        .action-buttons { display: flex; gap: 5px; }
+        .action-buttons a { text-decoration: none; }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 </head>
@@ -225,59 +192,21 @@ $expenses_query = $conn->query("SELECT * FROM expenses ORDER BY expense_date DES
 
 <div class="container">
     <aside class="sidebar">
-    <h2 class="logo">Boarding House</h2>
-    <ul class="menu">
-        <li>
-            <a href="dash.php">
-                <i class="fas fa-chart-line"></i> Dashboard
-            </a>
-        </li>
-        <li>
-            <a href="room.php">
-                <i class="fas fa-bed"></i> Rooms
-            </a>
-        </li>
-        <li>
-            <a href="tenant.php">
-                <i class="fas fa-users"></i> Tenants
-            </a>
-        </li>
-        <li>
-            <a href="payment.php">
-                <i class="fas fa-hand-holding-dollar"></i> Payments
-            </a>
-        </li>
-        <li>
-            <a href="mainten.php">
-                <i class="fas fa-tools"></i> Maintenance
-            </a>
-        </li>
-        <li>
-            <a href="reports.php">
-                <i class="fas fa-file-alt"></i> Reports
-            </a>
-        </li>
-        <li class="active">
-            <a href="expenses.php">
-                <i class="fas fa-receipt"></i> Expenses
-            </a>
-        </li>
-        <li>
-            <a href="settings.php">
-                <i class="fas fa-cog"></i> Settings
-            </a>
-        </li>
-        <li class="logout">
-            <a href="logout.php">
-                <i class="fas fa-right-from-bracket"></i> Logout
-            </a>
-        </li>
-    </ul>
-</aside>
+        <h2 class="logo">Boarding House</h2>
+        <ul class="menu">
+            <li><a href="dash.php"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+            <li><a href="room.php"><i class="fas fa-bed"></i> Rooms</a></li>
+            <li><a href="tenant.php"><i class="fas fa-users"></i> Tenants</a></li>
+            <li><a href="payment.php"><i class="fas fa-hand-holding-dollar"></i> Payments</a></li>
+            <li><a href="mainten.php"><i class="fas fa-tools"></i> Maintenance</a></li>
+            <li><a href="reports.php"><i class="fas fa-file-alt"></i> Reports</a></li>
+            <li class="active"><a href="expenses.php"><i class="fas fa-receipt"></i> Expenses</a></li>
+            <li><a href="settings.php"><i class="fas fa-cog"></i> Settings</a></li>
+            <li class="logout"><a href="logout.php"><i class="fas fa-right-from-bracket"></i> Logout</a></li>
+        </ul>
+    </aside>
 
-    <!-- Main Content -->
     <main class="main">
-        <!-- Top Bar -->
         <header class="topbar">
             <h1>Expenses</h1>
             <div class="profile">
@@ -287,14 +216,12 @@ $expenses_query = $conn->query("SELECT * FROM expenses ORDER BY expense_date DES
         </header>
 
         <?php if ($message): ?>
-        <div class="message <?php echo $message_type; ?>">
-            <?php echo htmlspecialchars($message); ?>
-        </div>
+            <div class="message <?php echo $message_type; ?>">
+                <?php echo htmlspecialchars($message); ?>
+            </div>
         <?php endif; ?>
 
-        <!-- Expense Table -->
         <section class="table-section">
-            <!-- Title + Add Button -->
             <div class="table-header">
                 <h2>Expense Records</h2>
                 <button class="add-btn" onclick="openModal()">+ Add Expense</button>
@@ -324,7 +251,15 @@ $expenses_query = $conn->query("SELECT * FROM expenses ORDER BY expense_date DES
                             </td>
                             <td>
                                 <div class="action-buttons">
-                                    <a href="edit_expense.php?id=<?php echo $expense['expense_id']; ?>" class="edit-btn">Edit</a>
+                                    <a href="#" class="edit-btn"
+                                       onclick="openEditModal(
+                                           <?php echo $expense['expense_id']; ?>,
+                                           '<?php echo $expense['expense_date']; ?>',
+                                           '<?php echo addslashes($expense['expense_type']); ?>',
+                                           '<?php echo addslashes($expense['description']); ?>',
+                                           <?php echo $expense['amount']; ?>,
+                                           '<?php echo $expense['status']; ?>'
+                                       )">Edit</a>
                                     <a href="#" class="delete-btn" onclick="confirmDelete(<?php echo $expense['expense_id']; ?>)">Delete</a>
                                 </div>
                             </td>
@@ -383,26 +318,76 @@ $expenses_query = $conn->query("SELECT * FROM expenses ORDER BY expense_date DES
     </div>
 </div>
 
+<!-- Edit Expense Modal -->
+<div id="editModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeEditModal()">&times;</span>
+        <h2>Edit Expense</h2>
+        <form method="POST" action="">
+            <input type="hidden" name="update_expense" value="1">
+            <input type="hidden" name="expense_id" id="edit_expense_id">
+            
+            <label>Expense Date</label>
+            <input type="date" name="expense_date" id="edit_expense_date" required>
+            
+            <label>Expense Type</label>
+            <select name="expense_type" id="edit_expense_type" required>
+                <option value="">Select type</option>
+                <option value="Electricity">Electricity</option>
+                <option value="Water">Water</option>
+                <option value="Internet">Internet</option>
+                <option value="Maintenance">Maintenance</option>
+                <option value="Repair">Repair</option>
+                <option value="Supplies">Supplies</option>
+                <option value="Salary">Salary</option>
+                <option value="Taxes">Taxes</option>
+                <option value="Other">Other</option>
+            </select>
+            
+            <label>Description</label>
+            <textarea name="description" id="edit_description" rows="3" placeholder="Enter expense description"></textarea>
+            
+            <label>Amount (₱)</label>
+            <input type="number" name="amount" id="edit_amount" step="0.01" min="0" required>
+            
+            <label>Status</label>
+            <select name="status" id="edit_status" required>
+                <option value="Pending">Pending</option>
+                <option value="Paid">Paid</option>
+            </select>
+            
+            <button type="submit">Update Expense</button>
+        </form>
+    </div>
+</div>
+
 <script>
 function openModal() {
     document.getElementById('expenseModal').style.display = 'block';
 }
-
 function closeModal() {
     document.getElementById('expenseModal').style.display = 'none';
 }
-
+function openEditModal(expenseId, expenseDate, expenseType, description, amount, status) {
+    document.getElementById('edit_expense_id').value = expenseId;
+    document.getElementById('edit_expense_date').value = expenseDate;
+    document.getElementById('edit_expense_type').value = expenseType;
+    document.getElementById('edit_description').value = description;
+    document.getElementById('edit_amount').value = amount;
+    document.getElementById('edit_status').value = status;
+    document.getElementById('editModal').style.display = 'block';
+}
+function closeEditModal() {
+    document.getElementById('editModal').style.display = 'none';
+}
 function confirmDelete(expenseId) {
     if (confirm('Are you sure you want to delete this expense?')) {
         window.location.href = 'expenses.php?delete_id=' + expenseId;
     }
-    return false;
 }
-
 window.onclick = function(event) {
-    if (event.target == document.getElementById('expenseModal')) {
-        closeModal();
-    }
+    if (event.target == document.getElementById('expenseModal')) closeModal();
+    if (event.target == document.getElementById('editModal')) closeEditModal();
 }
 </script>
 

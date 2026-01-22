@@ -88,8 +88,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link rel="stylesheet" href="login.css">
-<link rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body>
 
@@ -98,7 +97,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <!-- ========== TENANT FORM ========== -->
     <div class="form-container sign-up">
         <form method="POST">
-            <h1>Tenant Access</h1>
+            <h1>Tenant Login</h1>
 
             <div class="social-icons">
                 <a href="#" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
@@ -156,15 +155,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <div class="toggle">
 
             <div class="toggle-panel toggle-left">
-                <h1>Tenant Portal</h1>
-                <p>Login using your Tenant ID</p>
+                <h1>BOARDING HOUSE RENTAL MANAGEMENT SYSTEM</h1>
+                <p>Login as admin to manage the system</p>
                 <button class="hidden" id="login">Admin Login</button>
             </div>
 
             <div class="toggle-panel toggle-right">
-                <h1>Admin Panel</h1>
-                <p>Manage tenants and rooms</p>
-                <button class="hidden" id="register">Tenant Access</button>
+                <h1>BOARDING HOUSE RENTAL MANAGEMENT SYSTEM</h1>
+                <p>Login as a tenant to manage your rentals</p>
+                <button class="hidden" id="register">Tenant Login</button>
             </div>
 
         </div>

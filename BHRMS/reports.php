@@ -108,6 +108,7 @@ $maintenance_summary_query = $conn->query("
         .table-section {
             margin-bottom: 30px;
         }
+        
     </style>
 </head>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>

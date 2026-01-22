@@ -184,7 +184,7 @@ body {
   border-radius: 10px;
   border: 1px solid var(--text-muted);
   background: rgba(255, 255, 255, 0.08);
-  color: var(--text-dark);
+  color: white;
   cursor: pointer;
 }
 
@@ -244,6 +244,7 @@ table tbody tr:hover {
   flex-direction: column;
   gap: 15px;
 }
+
 
 .maintenance-form label {
   font-size: 14px;

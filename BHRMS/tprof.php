@@ -173,7 +173,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_info'])) {
 
       <div class="table-section" style="margin-top: 30px;">
         <h2>Account Information</h2>
-        <div style="background: #f8f9fa; padding: 15px; border-radius: 6px;">
+        
           <p><strong>Tenant ID:</strong> <?php echo $tenant_id; ?></p>
           <p><strong>Move-in Date:</strong> <?php echo date('F d, Y', strtotime($tenant['move_in_date'] ?? '')); ?></p>
           <p><strong>Account Status:</strong> <?php echo htmlspecialchars($tenant['status'] ?? 'Active'); ?></p>
