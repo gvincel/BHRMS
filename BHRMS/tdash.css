@@ -108,7 +108,7 @@ body {
 }
 
 .profile {
-  background: linear-gradient(135deg, var(--primary), var(--accent));
+  background: var(--primary);
   color: var(--white);
   padding: 10px 18px;
   border-radius: 999px;
@@ -162,22 +162,7 @@ body {
 }
 
 /* Table section */
-.table-section {
-  background: rgba(255, 255, 255, 0.08);
-  padding: 26px;
-  border-radius: 18px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
-}
 
-.table-section h2 {
-  font-size: 18px;
-  margin-bottom: 18px;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
 
 table thead {
   background: linear-gradient(90deg, var(--primary), var(--accent));

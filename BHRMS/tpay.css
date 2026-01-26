@@ -108,7 +108,7 @@ body {
 }
 
 .profile {
-  background: linear-gradient(135deg, var(--primary), var(--accent));
+  background: var(--primary);
   color: var(--white);
   padding: 10px 18px;
   border-radius: 999px;
@@ -178,6 +178,7 @@ body {
 table {
   width: 100%;
   border-collapse: collapse;
+  text-align: center;
 }
 
 table thead {
@@ -189,6 +190,7 @@ table th,
 table td {
   padding: 16px;
   font-size: 14px;
+  
 }
 
 table tbody tr {

@@ -66,7 +66,7 @@ $payments_result = $recent_payments->get_result();
         font-weight: bold;
     }
     .welcome-message {
-        background: linear-gradient(135deg, var(--primary) 0%, #10b981 100%);
+        background: var(--primary);
         color: white;
         padding: 20px;
         border-radius: 10px;
@@ -122,13 +122,12 @@ $payments_result = $recent_payments->get_result();
     }
     th, td {
         padding: 12px;
-        text-align: left;
         border-bottom: 1px solid #e5e7eb;
+        text-align: center;
     }
     th {
-        background: #f9fafb;
-        font-weight: 600;
-        color: #4b5563;
+        background: var(--primary);
+        color: white;
     }
     .menu a {
         display: flex;
@@ -157,9 +156,13 @@ $payments_result = $recent_payments->get_result();
         <li class="logout"><a href="logout.php"><i class="fas fa-right-from-bracket"></i>Logout</a></li>
       </ul>
     </aside>
-
-
+     
     <main class="main">
+      
+      <div class="topbar">
+        <h1>My Dashboard</h1>
+        <div class="profile"><?php echo htmlspecialchars($_SESSION['tenant_name']); ?></div>
+      </div>
 
       <div class="welcome-message">
         <h2>Welcome, <?php echo htmlspecialchars($_SESSION['tenant_name']); ?>!</h2>
@@ -174,11 +177,7 @@ $payments_result = $recent_payments->get_result();
         </div>
       </div>
 
-      <div class="topbar">
-        <h1>My Dashboard</h1>
-        <div class="profile"><?php echo htmlspecialchars($_SESSION['tenant_name']); ?></div>
-      </div>
-
+      
       <div class="cards">
         <div class="card">
           <h3>My Information</h3>

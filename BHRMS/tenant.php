@@ -118,7 +118,7 @@ $rooms_query = $conn->query("SELECT room_id, room_number FROM rooms WHERE status
 .edit-btn:hover { background-color: #1e40af; }
 .delete-btn { background-color: #dc2626; }
 .delete-btn:hover { background-color: #b91c1c; }
-.action-buttons { display: flex; gap: 5px; }
+.action-buttons { display: flex; justify-content: center; gap: 5px; }
 .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.4); overflow-y: auto; padding: 20px; box-sizing: border-box; }
 .modal-content { background-color: #fff; margin: 50px auto; padding: 20px; border-radius: 10px; width: 400px; max-width: 100%; box-shadow: 0 4px 15px rgba(0,0,0,0.2); color: black; }
 .modal-content h2 { margin-bottom: 15px; }

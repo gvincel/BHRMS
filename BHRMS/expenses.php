@@ -96,9 +96,6 @@ $expenses_query = $conn->query("SELECT * FROM expenses ORDER BY expense_date DES
     <link rel="stylesheet" href="dash.css">
     <style>
         .table-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             margin-bottom: 20px;
         }
         .add-btn, .edit-btn, .delete-btn {
@@ -183,7 +180,7 @@ $expenses_query = $conn->query("SELECT * FROM expenses ORDER BY expense_date DES
         .message { padding: 12px; margin-bottom: 20px; border-radius: 6px; text-align: center; }
         .success { background-color: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
         .error { background-color: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
-        .action-buttons { display: flex; gap: 5px; }
+        .action-buttons { display: flex; justify-content: center; gap: 1px; }
         .action-buttons a { text-decoration: none; }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
@@ -220,11 +217,10 @@ $expenses_query = $conn->query("SELECT * FROM expenses ORDER BY expense_date DES
                 <?php echo htmlspecialchars($message); ?>
             </div>
         <?php endif; ?>
-
+        <div class="add-btn-container"> <button class="add-btn" onclick="openModal()">+ Add Expense</button></div>
         <section class="table-section">
             <div class="table-header">
                 <h2>Expense Records</h2>
-                <button class="add-btn" onclick="openModal()">+ Add Expense</button>
             </div>
 
             <table>

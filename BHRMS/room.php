@@ -49,6 +49,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_room'])) {
     $check_stmt->close();
 }
 
+// Handle Edit Room
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['edit_room'])) {
+    $room_id = (int)$_POST['room_id'];
+    $room_number = trim($_POST['room_number']);
+    $room_type = trim($_POST['room_type']);
+    $capacity = (int)$_POST['capacity'];
+    $monthly_rent = (float)$_POST['monthly_rent'];
+    $status = trim($_POST['status']);
+
+    $sql = "UPDATE rooms 
+            SET room_number = ?, room_type = ?, capacity = ?, monthly_rent = ?, status = ?
+            WHERE room_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ssidsi", $room_number, $room_type, $capacity, $monthly_rent, $status, $room_id);
+
+    if ($stmt->execute()) {
+        header("Location: room.php?message=" . urlencode("Room updated successfully!") . "&type=success");
+        exit();
+    } else {
+        $message = "Error updating room!";
+        $message_type = "error";
+    }
+}
+
 // Handle Delete Room
 if (isset($_GET['delete_id'])) {
     $delete_id = (int)$_GET['delete_id'];
@@ -84,11 +108,11 @@ $rooms_query = $conn->query("SELECT * FROM rooms ORDER BY room_number");
 <link rel="stylesheet" href="dash.css">
 <style>
 <?php echo file_get_contents('room.css'); ?>
-
 .message {
     padding: 10px;
     margin: 10px 0;
     border-radius: 6px;
+    text-align: center;
 }
 .success {
     background-color: #d4edda;
@@ -117,7 +141,7 @@ $rooms_query = $conn->query("SELECT * FROM rooms ORDER BY room_number");
 .edit-btn:hover { background-color: #1e40af; }
 .delete-btn { background-color: #dc2626; }
 .delete-btn:hover { background-color: #b91c1c; }
-.action-buttons { display: flex; gap: 5px; }
+.action-buttons { display: flex; justify-content: center; gap: 5px; }
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 </head>
@@ -160,7 +184,7 @@ $rooms_query = $conn->query("SELECT * FROM rooms ORDER BY room_number");
 
 <section class="table-section">
 <h2>All Rooms</h2>
-<table class="table">
+<table>
     <thead>
         <tr>
             <th>Room Number</th>
@@ -186,8 +210,8 @@ $rooms_query = $conn->query("SELECT * FROM rooms ORDER BY room_number");
                     <div class="action-buttons">
                         <button class="edit-btn" onclick="editRoom(
                             <?php echo $room['room_id']; ?>,
-                            '<?php echo htmlspecialchars($room['room_number']); ?>',
-                            '<?php echo htmlspecialchars($room['room_type']); ?>',
+                            '<?php echo addslashes($room['room_number']); ?>',
+                            '<?php echo addslashes($room['room_type']); ?>',
                             <?php echo $room['capacity']; ?>,
                             <?php echo $room['monthly_rent']; ?>,
                             '<?php echo $room['status']; ?>'
@@ -248,7 +272,8 @@ $rooms_query = $conn->query("SELECT * FROM rooms ORDER BY room_number");
 <div class="modal-content">
     <span class="close" onclick="closeEditModal()">&times;</span>
     <h2>Edit Room</h2>
-    <form method="POST" action="edit_room.php" id="editForm">
+    <form method="POST" action="" id="editForm">
+        <input type="hidden" name="edit_room" value="1">
         <input type="hidden" name="room_id" id="edit_room_id">
         
         <label>Room Number</label>

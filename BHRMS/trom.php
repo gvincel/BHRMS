@@ -54,11 +54,11 @@ $all_rooms_query = $conn->query("
   <link rel="stylesheet" href="trom.css">
   <style>
     .paid {
-        color: #10b981;
+        color: var(--warning);
         font-weight: bold;
     }
     .pending {
-        color: #f59e0b;
+        color: #10b981;
         font-weight: bold;
     }
     .my-room-card {

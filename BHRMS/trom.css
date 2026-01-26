@@ -108,7 +108,7 @@ body {
 }
 
 .profile {
-  background: linear-gradient(135deg, var(--primary), var(--accent));
+  background: var(--primary);
   color: var(--white);
   padding: 10px 18px;
   border-radius: 999px;
@@ -208,7 +208,7 @@ table {
 }
 
 table thead {
-  background: linear-gradient(90deg, var(--primary), var(--accent));
+  background: var(--primary);
   color: var(--white);
 }
 
@@ -216,7 +216,7 @@ table th,
 table td {
   padding: 16px;
   font-size: 14px;
-  text-align: left;
+  text-align: center;
 }
 
 table tbody tr {
@@ -226,16 +226,6 @@ table tbody tr {
 
 table tbody tr:hover {
   background-color: rgba(255, 255, 255, 0.05);
-}
-
-.paid {
-  color: var(--success);
-  font-weight: 600;
-}
-
-.pending {
-  color: var(--warning);
-  font-weight: 600;
 }
 
 /* Forms (if needed) */

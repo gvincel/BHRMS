@@ -149,6 +149,7 @@ $payments_result = $payments_query->get_result();
               <th>Payment Method</th>
               <th>Status</th>
               <th>Remarks</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
