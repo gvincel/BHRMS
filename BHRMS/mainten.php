@@ -138,8 +138,8 @@ $maintenance_query = $conn->query("
 .modal .close { position: absolute; top: 10px; right: 15px; font-size: 28px; cursor: pointer; }
 .modal label { display: block; margin-top: 10px; }
 .modal input, .modal select { width: 100%; padding: 8px; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc; }
-.modal button { margin-top: 15px; padding: 10px 15px; border: none; border-radius: 6px; background-color: #2563eb; color: #fff; cursor: pointer; }
-.modal button:hover { background-color: #1e40af; }
+.modal button { margin-top: 15px; width: 100%; padding: 10px; background-color: #10b981; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+.modal button:hover { background-color: var(--primary); }
 
 /* Popup notification similar to room.php */
 .message {
@@ -151,6 +151,7 @@ $maintenance_query = $conn->query("
 }
 .success { background-color: #d4edda; color: #065f46; border-color: #c3e6cb; }
 .error { background-color: #f8d7da; color: #b91c1c; border-color: #f5c6cb; }
+.close {color:black;}
 </style>
 </head>
 <body>

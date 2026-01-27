@@ -303,6 +303,7 @@ table tbody tr:hover {
 .modal-content h2,
 .modal-content label {
   color: black;
+  margin-bottom: 15px;
 }
 
 .modal-content input,
@@ -314,8 +315,27 @@ table tbody tr:hover {
   border: 1px solid #ccc;
 }
 
+.modal-content form button {
+    margin-top: 15px;
+    width: 100%;
+    padding: 10px;
+    background-color: #10b981;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
 .edit-btn { background-color: #2563eb; }
 .edit-btn:hover { background-color: #1e40af; }
 .delete-btn { background-color: #dc2626; }
 .delete-btn:hover { background-color: #b91c1c; }
 .action-buttons { display: flex; gap: 5px; }
+.close {
+    float: right;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    color: black;
+}

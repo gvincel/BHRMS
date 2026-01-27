@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome to Our Boarding House</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background-color: #1f2f46;
+      color: #e5e7eb;
+    }
+    header {
+      background: linear-gradient(135deg, #0f766e, #064e3b);
+      color: white;
+      padding: 60px 20px;
+      text-align: center;
+    }
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+    header p {
+      font-size: 1.1rem;
+      max-width: 700px;
+      margin: auto;
+      color: #d1fae5;
+    }
+    .btn {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 25px;
+      background-color: #10b981;
+      color: #022c22;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+    .btn:hover {
+      background-color: #059669;
+      color: white;
+    }
+    .container {
+      padding: 40px 20px;
+      max-width: 1100px;
+      margin: auto;
+    }
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: #2c3e55;
+      border-radius: 14px;
+      padding: 25px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.25);
+      text-align: center;
+    }
+    .card h3 {
+      margin-bottom: 10px;
+      color: #34d399;
+    }
+    .card p {
+      font-size: 0.95rem;
+      color: #e5e7eb;
+    }
+    .gallery {
+      margin-top: 50px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+    }
+    .gallery div {
+      background-color: #334155;
+      height: 180px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #9ca3af;
+      font-size: 0.9rem;
+    }
+    .cta {
+      background: linear-gradient(135deg, #064e3b, #022c22);
+      color: white;
+      padding: 50px 20px;
+      text-align: center;
+      margin-top: 60px;
+    }
+    .cta h2 {
+      font-size: 2rem;
+      margin-bottom: 15px;
+      color: #6ee7b7;
+    }
+    footer {
+      background-color: #020617;
+      color: #9ca3af;
+      text-align: center;
+      padding: 20px;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Comfortable & Affordable Boarding House</h1>
+    <p>Your home away from home – clean rooms, safe environment, and easy management using our Boarding House System.</p>
+    <a href="login.php" class="btn">Log In</a>
+  </header>
+
+  <section class="container">
+    <h2 style="text-align:center; margin-bottom:30px;">Why Choose Our Boarding House?</h2>
+    <div class="features">
+      <div class="card">
+        <h3>📍 Accessible Location</h3>
+        <p>Near schools, markets, and public transportation for your daily convenience.</p>
+      </div>
+      <div class="card">
+        <h3>🛏️ Comfortable Rooms</h3>
+        <p>Clean, well-ventilated rooms designed for students and working individuals.</p>
+      </div>
+      <div class="card">
+        <h3>🔐 Safe & Secure</h3>
+        <p>Secure facilities with clear rules to ensure a peaceful living environment.</p>
+      </div>
+      <div class="card">
+        <h3>💻 Easy Management</h3>
+        <p>Managed through a modern Boarding House Management System for smooth transactions.</p>
+      </div>
+    </div>
+
+    <div class="gallery">
+      <div>Room Image</div>
+      <div>Common Area</div>
+      <div>Bathroom</div>
+      <div>Building Front</div>
+    </div>
+  </section>
+
+  <section class="cta" id="contact">
+    <h2>Looking for a Place to Stay?</h2>
+    <p>Reserve your room today and experience comfort, safety, and convenience.</p>
+    <a href="#" class="btn">View Available Rooms</a>
+  </section>
+
+  <footer>
+    <p>© 2026 Boarding House Management System | All Rights Reserved</p>
+  </footer>
+
+</body>
+</html>
