@@ -155,6 +155,7 @@ $rooms_query = $conn->query("SELECT * FROM rooms ORDER BY room_number");
     <li class="active"><a href="room.php"><i class="fas fa-bed"></i> Rooms</a></li>
     <li><a href="tenant.php"><i class="fas fa-users"></i> Tenants</a></li>
     <li><a href="payment.php"><i class="fas fa-hand-holding-dollar"></i> Payments</a></li>
+    <li><a href="transaction.php"><i class="fas fa-list-alt"></i> Transaction Records</a></li>
     <li><a href="mainten.php"><i class="fas fa-tools"></i> Maintenance</a></li>
     <li><a href="reports.php"><i class="fas fa-file-alt"></i> Reports</a></li>
     <li><a href="expenses.php"><i class="fas fa-receipt"></i> Expenses</a></li>

@@ -162,16 +162,6 @@ $payments_query = $conn->query("
     background-color: #1e40af;
 }
 
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 24px;
-    font-weight: bold;
-    cursor: pointer;
-}
-.close:hover {
-    color: #000;
-}
 </style>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
@@ -186,6 +176,7 @@ $payments_query = $conn->query("
     <li><a href="room.php"><i class="fas fa-bed"></i> Rooms</a></li>
     <li><a href="tenant.php"><i class="fas fa-users"></i> Tenants</a></li>
     <li class="active"><a href="payment.php"><i class="fas fa-hand-holding-dollar"></i> Payments</a></li>
+    <li><a href="transaction.php"><i class="fas fa-list-alt"></i> Transaction Records</a></li>
     <li><a href="mainten.php"><i class="fas fa-tools"></i> Maintenance</a></li>
     <li><a href="reports.php"><i class="fas fa-file-alt"></i> Reports</a></li>
     <li><a href="expenses.php"><i class="fas fa-receipt"></i> Expenses</a></li>

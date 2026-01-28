@@ -31,9 +31,9 @@ body {
 .sidebar {
   width: 260px;
   height: 100vh;
-  position: fixed;          /* ✅ FIX */
-  top: 0;                   /* ✅ FIX */
-  left: 0;                  /* ✅ FIX */
+  position: fixed; /* ✅ FIX */
+  top: 0; /* ✅ FIX */
+  left: 0; /* ✅ FIX */
 
   background: linear-gradient(180deg, var(--bg-main), var(--primary));
   color: var(--white);
@@ -44,18 +44,17 @@ body {
 }
 
 .sidebar::-webkit-scrollbar {
-    width: 6px;
+  width: 6px;
 }
 
 .sidebar::-webkit-scrollbar-thumb {
-    background-color: var(--accent);
-    border-radius: 10px;
+  background-color: var(--accent);
+  border-radius: 10px;
 }
 
 .sidebar::-webkit-scrollbar-track {
-    background: transparent;
+  background: transparent;
 }
-
 
 .logo {
   text-align: center;
@@ -74,7 +73,9 @@ body {
   margin-bottom: 12px;
   border-radius: 10px;
   cursor: pointer;
-  transition: background 0.3s, transform 0.2s;
+  transition:
+    background 0.3s,
+    transform 0.2s;
 }
 
 .menu li:hover {
@@ -112,7 +113,7 @@ body {
 /* MAIN — PUSHED RIGHT FOR FIXED SIDEBAR */
 .main {
   flex: 1;
-  margin-left: 260px;       /* ✅ FIX */
+  margin-left: 260px; /* ✅ FIX */
   padding: 30px;
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px);
@@ -163,7 +164,9 @@ body {
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
   position: relative;
   overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .card::after {
@@ -249,7 +252,7 @@ table tbody tr:hover {
   }
 
   .main {
-    margin-left: 0;        /* ✅ FIX */
+    margin-left: 0; /* ✅ FIX */
     padding: 20px;
   }
 
@@ -288,22 +291,30 @@ table tbody tr:hover {
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: rgba(0,0,0,0.4);
+  background-color: rgba(0, 0, 0, 0.4);
 }
 
 .modal-content {
   background-color: #fff;
-  margin: 10% auto;
+  margin: 50px auto;
   padding: 20px;
   border-radius: 10px;
   width: 400px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  max-width: 100%;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  color: black;
 }
 
-.modal-content h2,
+.modal-content h2 {
+  margin-bottom: 15px;
+}
+
 .modal-content label {
   color: black;
-  margin-bottom: 15px;
+  margin-bottom: 5px;
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
 }
 
 .modal-content input,
@@ -316,26 +327,38 @@ table tbody tr:hover {
 }
 
 .modal-content form button {
-    margin-top: 15px;
-    width: 100%;
-    padding: 10px;
-    background-color: #10b981;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
+  margin-top: 15px;
+  width: 100%;
+  padding: 10px;
+  background-color: #10b981;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
 }
 
-.edit-btn { background-color: #2563eb; }
-.edit-btn:hover { background-color: #1e40af; }
-.delete-btn { background-color: #dc2626; }
-.delete-btn:hover { background-color: #b91c1c; }
-.action-buttons { display: flex; gap: 5px; }
+.edit-btn {
+  background-color: #2563eb;
+}
+.edit-btn:hover {
+  background-color: #1e40af;
+}
+.delete-btn {
+  background-color: #dc2626;
+}
+.delete-btn:hover {
+  background-color: #b91c1c;
+}
+.action-buttons {
+  display: flex;
+  gap: 5px;
+}
+
 .close {
-    float: right;
-    font-size: 24px;
-    font-weight: bold;
-    cursor: pointer;
-    color: black;
+  float: right;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  color: black;
 }

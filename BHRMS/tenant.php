@@ -120,13 +120,10 @@ $rooms_query = $conn->query("SELECT room_id, room_number FROM rooms WHERE status
 .delete-btn:hover { background-color: #b91c1c; }
 .action-buttons { display: flex; justify-content: center; gap: 5px; }
 .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.4); overflow-y: auto; padding: 20px; box-sizing: border-box; }
-.modal-content { background-color: #fff; margin: 50px auto; padding: 20px; border-radius: 10px; width: 400px; max-width: 100%; box-shadow: 0 4px 15px rgba(0,0,0,0.2); color: black; }
-.modal-content h2 { margin-bottom: 15px; }
-.modal-content form label { display: block; margin-top: 10px; font-weight: bold; }
+
 .modal-content form input, .modal-content form select { width: 100%; padding: 8px; margin-top: 5px; border-radius: 6px; border: 1px solid #ccc; }
 .modal-content form button { margin-top: 15px; width: 100%; padding: 10px; background-color: #10b981; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
 .modal-content form button:hover { background-color: #059669; }
-.close { float: right; font-size: 24px; font-weight: bold; cursor: pointer; }
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 </head>
@@ -140,6 +137,7 @@ $rooms_query = $conn->query("SELECT room_id, room_number FROM rooms WHERE status
     <li><a href="room.php"><i class="fas fa-bed"></i> Rooms</a></li>
     <li class="active"><a href="tenant.php"><i class="fas fa-users"></i> Tenants</a></li>
     <li><a href="payment.php"><i class="fas fa-hand-holding-dollar"></i> Payments</a></li>
+    <li><a href="transaction.php"><i class="fas fa-list-alt"></i> Transaction Records</a></li>
     <li><a href="mainten.php"><i class="fas fa-tools"></i> Maintenance</a></li>
     <li><a href="reports.php"><i class="fas fa-file-alt"></i> Reports</a></li>
     <li><a href="expenses.php"><i class="fas fa-receipt"></i> Expenses</a></li>
@@ -224,36 +222,46 @@ $rooms_query = $conn->query("SELECT room_id, room_number FROM rooms WHERE status
     <div class="modal-content">
         <span class="close" onclick="closeTenantModal()">&times;</span>
         <h2>Add New Tenant</h2>
-        <form method="POST" action="">
-            <input type="hidden" name="add_tenant" value="1">
-            <label>Full Name</label>
-            <input type="text" name="full_name" required>
-            <label>Contact Number</label>
-            <input type="text" name="contact_number">
-            <label>Email</label>
-            <input type="email" name="email">
-            <label>Address</label>
-            <input type="text" name="address">
-            <label>Room</label>
-            <select name="room_id">
-                <option value="">Not Assigned</option>
-                <?php 
-                $rooms_query->data_seek(0); // Reset pointer
-                while ($room = $rooms_query->fetch_assoc()): ?>
-                    <option value="<?php echo $room['room_id']; ?>">
-                        Room <?php echo htmlspecialchars($room['room_number']); ?>
-                    </option>
-                <?php endwhile; ?>
-            </select>
-            <label>Move-in Date</label>
-            <input type="date" name="move_in_date">
-            <label>Status</label>
-            <select name="status" required>
-                <option value="Active">Active</option>
-                <option value="Inactive">Inactive</option>
-            </select>
-            <button type="submit">Add Tenant</button>
-        </form>
+<form method="POST" action="">
+    <input type="hidden" name="add_tenant" value="1">
+
+    <label>Full Name</label>
+    <input type="text" name="full_name" placeholder="Enter tenant's full name" required>
+
+    <label>Contact Number</label>
+    <input type="text" name="contact_number" placeholder="e.g. 09XXXXXXXXX">
+
+    <label>Email</label>
+    <input type="email" name="email" placeholder="e.g. tenant@email.com">
+
+    <label>Address</label>
+    <input type="text" name="address" placeholder="Enter complete address">
+
+    <label>Room</label>
+    <select name="room_id">
+        <option value="">Select room</option>
+        <?php 
+        $rooms_query->data_seek(0); // Reset pointer
+        while ($room = $rooms_query->fetch_assoc()): ?>
+            <option value="<?php echo $room['room_id']; ?>">
+                Room <?php echo htmlspecialchars($room['room_number']); ?>
+            </option>
+        <?php endwhile; ?>
+    </select>
+
+    <label>Move-in Date</label>
+    <input type="date" name="move_in_date" placeholder="Select move-in date">
+
+    <label>Status</label>
+    <select name="status" required>
+        <option value="" disabled selected>Select status</option>
+        <option value="Active">Active</option>
+        <option value="Inactive">Inactive</option>
+    </select>
+
+    <button type="submit">Add Tenant</button>
+</form>
+
     </div>
 </div>
 

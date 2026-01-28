@@ -139,6 +139,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <div style="color:red;text-align:center;margin:10px 0;">
                 <?php echo htmlspecialchars($error); ?>
             </div>
+            
             <?php endif; ?>
 
             <input type="hidden" name="login_type" value="admin">

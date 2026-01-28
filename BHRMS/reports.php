@@ -139,6 +139,11 @@ $maintenance_summary_query = $conn->query("
             </a>
         </li>
         <li>
+            <a href="transaction.php">
+                <i class="fas fa-list-alt"></i> Transaction Records
+            </a>
+        </li>
+        <li>
             <a href="mainten.php">
                 <i class="fas fa-tools"></i> Maintenance
             </a>

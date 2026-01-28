@@ -11,7 +11,7 @@ if (!isset($_SESSION['user_id'])) {
 $message = '';
 $message_type = '';
 
-// Handle Add Expense
+// Handle Add Expense only
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_expense'])) {
     $expense_date = $_POST['expense_date'];
     $expense_type = trim($_POST['expense_type']);
@@ -36,48 +36,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_expense'])) {
     $stmt->close();
 }
 
-// Handle Update Expense
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_expense'])) {
-    $expense_id = (int)$_POST['expense_id'];
-    $expense_date = $_POST['expense_date'];
-    $expense_type = trim($_POST['expense_type']);
-    $description = trim($_POST['description']);
-    $amount = (float)$_POST['amount'];
-    $status = $_POST['status'];
-
-    $update_sql = "UPDATE expenses SET expense_date=?, expense_type=?, description=?, amount=?, status=? WHERE expense_id=?";
-    $stmt = $conn->prepare($update_sql);
-    $stmt->bind_param("sssdsd", $expense_date, $expense_type, $description, $amount, $status, $expense_id);
-
-    if ($stmt->execute()) {
-        $message = "Expense updated successfully!";
-        $message_type = "success";
-        header("Location: expenses.php?message=" . urlencode($message) . "&type=" . $message_type);
-        exit();
-    } else {
-        $message = "Error updating expense: " . $conn->error;
-        $message_type = "error";
-    }
-    $stmt->close();
-}
-
-// Handle Delete Expense
-if (isset($_GET['delete_id'])) {
-    $delete_id = (int)$_GET['delete_id'];
-    $delete_sql = "DELETE FROM expenses WHERE expense_id = ?";
-    $delete_stmt = $conn->prepare($delete_sql);
-    $delete_stmt->bind_param("i", $delete_id);
-    
-    if ($delete_stmt->execute()) {
-        $message = "Expense deleted successfully!";
-        $message_type = "success";
-    } else {
-        $message = "Error deleting expense!";
-        $message_type = "error";
-    }
-    $delete_stmt->close();
-}
-
 // Check for message from URL
 if (isset($_GET['message'])) {
     $message = urldecode($_GET['message']);
@@ -98,14 +56,12 @@ $expenses_query = $conn->query("SELECT * FROM expenses ORDER BY expense_date DES
         .table-header {
             margin-bottom: 20px;
         }
-        .add-btn, .edit-btn, .delete-btn {
+        .add-btn {
             text-decoration: none;
             display: inline-block;
             border-radius: 6px;
             cursor: pointer;
             transition: background 0.3s;
-        }
-        .add-btn {
             background-color: #10b981;
             color: white;
             padding: 8px 16px;
@@ -113,21 +69,6 @@ $expenses_query = $conn->query("SELECT * FROM expenses ORDER BY expense_date DES
             border: none;
         }
         .add-btn:hover { background-color: #059669; }
-        .edit-btn {
-            padding: 6px 12px;
-            background-color: #2563eb;
-            color: #fff;
-            font-size: 14px;
-            margin-right: 5px;
-        }
-        .edit-btn:hover { background-color: #1e40af; }
-        .delete-btn {
-            padding: 6px 12px;
-            background-color: #dc2626;
-            color: #fff;
-            font-size: 14px;
-        }
-        .delete-btn:hover { background-color: #b91c1c; }
         .expense-paid { color: #10b981; font-weight: bold; }
         .expense-pending { color: #d97706; font-weight: bold; }
         .modal {
@@ -180,8 +121,7 @@ $expenses_query = $conn->query("SELECT * FROM expenses ORDER BY expense_date DES
         .message { padding: 12px; margin-bottom: 20px; border-radius: 6px; text-align: center; }
         .success { background-color: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
         .error { background-color: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
-        .action-buttons { display: flex; justify-content: center; gap: 1px; }
-        .action-buttons a { text-decoration: none; }
+        
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 </head>
@@ -195,6 +135,7 @@ $expenses_query = $conn->query("SELECT * FROM expenses ORDER BY expense_date DES
             <li><a href="room.php"><i class="fas fa-bed"></i> Rooms</a></li>
             <li><a href="tenant.php"><i class="fas fa-users"></i> Tenants</a></li>
             <li><a href="payment.php"><i class="fas fa-hand-holding-dollar"></i> Payments</a></li>
+            <li><a href="transaction.php"><i class="fas fa-list-alt"></i> Transaction Records</a></li>
             <li><a href="mainten.php"><i class="fas fa-tools"></i> Maintenance</a></li>
             <li><a href="reports.php"><i class="fas fa-file-alt"></i> Reports</a></li>
             <li class="active"><a href="expenses.php"><i class="fas fa-receipt"></i> Expenses</a></li>
@@ -231,7 +172,6 @@ $expenses_query = $conn->query("SELECT * FROM expenses ORDER BY expense_date DES
                         <th>Description</th>
                         <th>Amount</th>
                         <th>Status</th>
-                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -245,25 +185,11 @@ $expenses_query = $conn->query("SELECT * FROM expenses ORDER BY expense_date DES
                             <td class="expense-<?php echo strtolower($expense['status']); ?>">
                                 <?php echo $expense['status']; ?>
                             </td>
-                            <td>
-                                <div class="action-buttons">
-                                    <a href="#" class="edit-btn"
-                                       onclick="openEditModal(
-                                           <?php echo $expense['expense_id']; ?>,
-                                           '<?php echo $expense['expense_date']; ?>',
-                                           '<?php echo addslashes($expense['expense_type']); ?>',
-                                           '<?php echo addslashes($expense['description']); ?>',
-                                           <?php echo $expense['amount']; ?>,
-                                           '<?php echo $expense['status']; ?>'
-                                       )">Edit</a>
-                                    <a href="#" class="delete-btn" onclick="confirmDelete(<?php echo $expense['expense_id']; ?>)">Delete</a>
-                                </div>
-                            </td>
                         </tr>
                         <?php endwhile; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="6" style="text-align: center;">No expense records found</td>
+                            <td colspan="5" style="text-align: center;">No expense records found</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
@@ -314,49 +240,6 @@ $expenses_query = $conn->query("SELECT * FROM expenses ORDER BY expense_date DES
     </div>
 </div>
 
-<!-- Edit Expense Modal -->
-<div id="editModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeEditModal()">&times;</span>
-        <h2>Edit Expense</h2>
-        <form method="POST" action="">
-            <input type="hidden" name="update_expense" value="1">
-            <input type="hidden" name="expense_id" id="edit_expense_id">
-            
-            <label>Expense Date</label>
-            <input type="date" name="expense_date" id="edit_expense_date" required>
-            
-            <label>Expense Type</label>
-            <select name="expense_type" id="edit_expense_type" required>
-                <option value="">Select type</option>
-                <option value="Electricity">Electricity</option>
-                <option value="Water">Water</option>
-                <option value="Internet">Internet</option>
-                <option value="Maintenance">Maintenance</option>
-                <option value="Repair">Repair</option>
-                <option value="Supplies">Supplies</option>
-                <option value="Salary">Salary</option>
-                <option value="Taxes">Taxes</option>
-                <option value="Other">Other</option>
-            </select>
-            
-            <label>Description</label>
-            <textarea name="description" id="edit_description" rows="3" placeholder="Enter expense description"></textarea>
-            
-            <label>Amount (₱)</label>
-            <input type="number" name="amount" id="edit_amount" step="0.01" min="0" required>
-            
-            <label>Status</label>
-            <select name="status" id="edit_status" required>
-                <option value="Pending">Pending</option>
-                <option value="Paid">Paid</option>
-            </select>
-            
-            <button type="submit">Update Expense</button>
-        </form>
-    </div>
-</div>
-
 <script>
 function openModal() {
     document.getElementById('expenseModal').style.display = 'block';
@@ -364,26 +247,8 @@ function openModal() {
 function closeModal() {
     document.getElementById('expenseModal').style.display = 'none';
 }
-function openEditModal(expenseId, expenseDate, expenseType, description, amount, status) {
-    document.getElementById('edit_expense_id').value = expenseId;
-    document.getElementById('edit_expense_date').value = expenseDate;
-    document.getElementById('edit_expense_type').value = expenseType;
-    document.getElementById('edit_description').value = description;
-    document.getElementById('edit_amount').value = amount;
-    document.getElementById('edit_status').value = status;
-    document.getElementById('editModal').style.display = 'block';
-}
-function closeEditModal() {
-    document.getElementById('editModal').style.display = 'none';
-}
-function confirmDelete(expenseId) {
-    if (confirm('Are you sure you want to delete this expense?')) {
-        window.location.href = 'expenses.php?delete_id=' + expenseId;
-    }
-}
 window.onclick = function(event) {
     if (event.target == document.getElementById('expenseModal')) closeModal();
-    if (event.target == document.getElementById('editModal')) closeEditModal();
 }
 </script>
 

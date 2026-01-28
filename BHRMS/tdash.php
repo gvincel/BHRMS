@@ -2,14 +2,12 @@
 session_start();
 include "db.php";
 
-
 if (!isset($_SESSION['tenant_id']) || $_SESSION['user_type'] !== 'tenant') {
     header("Location: login.php");
     exit();
 }
 
 $tenant_id = $_SESSION['tenant_id'];
-
 
 $tenant_query = $conn->prepare("
     SELECT t.*, r.room_number, r.monthly_rent 
@@ -22,7 +20,6 @@ $tenant_query->execute();
 $tenant_result = $tenant_query->get_result(); 
 $tenant = $tenant_result->fetch_assoc(); 
 
-
 $pending_query = $conn->prepare("SELECT COUNT(*) as count FROM maintenance_requests WHERE tenant_id = ? AND status = 'Pending'");
 $pending_query->bind_param("i", $tenant_id);
 $pending_query->execute();
@@ -30,14 +27,12 @@ $pending_result = $pending_query->get_result();
 $pending_row = $pending_result->fetch_assoc();
 $pending_count = $pending_row['count'];
 
-
 $paid_query = $conn->prepare("SELECT COUNT(*) as count FROM payments WHERE tenant_id = ? AND (remarks LIKE '%paid%' OR remarks LIKE '%completed%')");
 $paid_query->bind_param("i", $tenant_id);
 $paid_query->execute();
 $paid_result = $paid_query->get_result(); 
 $paid_row = $paid_result->fetch_assoc(); 
 $paid_count = $paid_row['count'];
-
 
 $recent_payments = $conn->prepare("
     SELECT * FROM payments 
@@ -139,6 +134,103 @@ $payments_result = $recent_payments->get_result();
         width: 18px;
         text-align: center;
     }
+    
+    /* ============ ADD NOTIFICATION STYLES ============ */
+    .notification-container {
+        position: relative;
+        display: inline-block;
+        margin-right: 20px;
+    }
+    
+    .notification-icon {
+        position: relative;
+        cursor: pointer;
+        font-size: 1.5rem;
+        color: #333;
+        padding: 8px;
+        border-radius: 50%;
+        transition: background 0.3s;
+    }
+    
+    .notification-icon:hover {
+        background: #f0f0f0;
+    }
+    
+    .notification-badge {
+        position: absolute;
+        top: 0;
+        right: 0;
+        background-color: #ff4757;
+        color: white;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        border: 2px solid white;
+    }
+    
+    .notification-dropdown {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        width: 300px;
+        max-height: 400px;
+        overflow-y: auto;
+        z-index: 1000;
+        display: none;
+        margin-top: 10px;
+    }
+    
+    .notification-dropdown.active {
+        display: block;
+    }
+    
+    .notification-header {
+        padding: 15px;
+        border-bottom: 1px solid #e5e7eb;
+        background: var(--primary);
+        color: white;
+        border-radius: 8px 8px 0 0;
+    }
+    
+    .notification-header h3 {
+        margin: 0;
+        font-size: 16px;
+    }
+    
+    .no-notifications {
+        padding: 30px 20px;
+        text-align: center;
+        color: #6b7280;
+        font-size: 14px;
+    }
+    
+    .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+    }
+    
+    .profile-area {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+    
+    .profile {
+        font-weight: 600;
+        color: white;
+    }
+    /* ============ END NOTIFICATION STYLES ============ */
   </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 </head>
@@ -161,7 +253,29 @@ $payments_result = $recent_payments->get_result();
       
       <div class="topbar">
         <h1>My Dashboard</h1>
-        <div class="profile"><?php echo htmlspecialchars($_SESSION['tenant_name']); ?></div>
+        <div class="profile-area">
+          <!-- ============ ADD NOTIFICATION ICON HERE ============ -->
+          <div class="notification-container">
+            <div class="notification-icon" onclick="toggleNotifications()">
+              <i class="fas fa-bell"></i>
+              <!-- Static badge for testing - you can remove or change later -->
+              <span class="notification-badge">3</span>
+            </div>
+            <div class="notification-dropdown" id="notificationDropdown">
+              <div class="notification-header">
+                <h3>Notifications</h3>
+              </div>
+              <div class="no-notifications">
+                <p><i class="fas fa-bell" style="font-size: 24px; color: #9ca3af; margin-bottom: 10px;"></i></p>
+                <p>No notifications yet</p>
+                <p style="font-size: 12px; margin-top: 5px; color: #9ca3af;">Connect to database to see real notifications</p>
+              </div>
+            </div>
+          </div>
+          <!-- ============ END NOTIFICATION ICON ============ -->
+          
+          <div class="profile"><?php echo htmlspecialchars($_SESSION['tenant_name']); ?></div>
+        </div>
       </div>
 
       <div class="welcome-message">
@@ -247,6 +361,25 @@ $payments_result = $recent_payments->get_result();
       </div>
     </main>
   </div>
+
+  <!-- ============ ADD JAVASCRIPT FOR NOTIFICATIONS ============ -->
+  <script>
+    function toggleNotifications() {
+        const dropdown = document.getElementById('notificationDropdown');
+        dropdown.classList.toggle('active');
+        console.log('Notifications toggled');
+    }
+    
+    // Close notifications when clicking outside
+    document.addEventListener('click', function(event) {
+        const dropdown = document.getElementById('notificationDropdown');
+        const icon = document.querySelector('.notification-icon');
+        
+        if (!icon.contains(event.target) && !dropdown.contains(event.target)) {
+            dropdown.classList.remove('active');
+        }
+    });
+  </script>
 </body>
 
 </html>
