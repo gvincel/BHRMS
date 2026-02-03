@@ -87,7 +87,7 @@ if (isset($_GET['delete_id'])) {
     $delete_stmt->bind_param("i", $delete_id);
 
     if ($delete_stmt->execute()) {
-        $message = "Tenant deleted successfully!";
+        $message = "Tenant removed successfully!";
         $message_type = "success";
     } else {
         $message = "Error deleting tenant!";
@@ -97,8 +97,9 @@ if (isset($_GET['delete_id'])) {
 }
 
 // Fetch tenants and rooms
-$tenants_query = $conn->query("SELECT t.tenant_id, t.full_name, t.contact_number, t.email, t.address, t.move_in_date, t.status, r.room_number FROM tenants t LEFT JOIN rooms r ON t.room_id = r.room_id ORDER BY t.full_name");
+$tenants_query = $conn->query("SELECT t.tenant_id, t.full_name, t.contact_number, t.email, t.address, t.move_in_date, t.status, t.room_id, r.room_number FROM tenants t LEFT JOIN rooms r ON t.room_id = r.room_id ORDER BY t.full_name");
 $rooms_query = $conn->query("SELECT room_id, room_number FROM rooms WHERE status='Available'");
+$rooms_query_all = $conn->query("SELECT room_id, room_number FROM rooms ORDER BY room_number");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -140,7 +141,7 @@ $rooms_query = $conn->query("SELECT room_id, room_number FROM rooms WHERE status
     <li><a href="transaction.php"><i class="fas fa-list-alt"></i> Transaction Records</a></li>
     <li><a href="mainten.php"><i class="fas fa-tools"></i> Maintenance</a></li>
     <li><a href="reports.php"><i class="fas fa-file-alt"></i> Reports</a></li>
-    <li><a href="expenses.php"><i class="fas fa-receipt"></i> Expenses</a></li>
+    <li><a href="expenses.php"><i class="fas fa-file-invoice-dollar"></i> Expenses</a></li>
     <li><a href="settings.php"><i class="fas fa-cog"></i> Settings</a></li>
     <li class="logout"><a href="logout.php"><i class="fas fa-right-from-bracket"></i> Logout</a></li>
 </ul>
@@ -199,11 +200,11 @@ $rooms_query = $conn->query("SELECT room_id, room_number FROM rooms WHERE status
                                 '<?php echo addslashes($tenant['contact_number']); ?>',
                                 '<?php echo addslashes($tenant['email']); ?>',
                                 '<?php echo addslashes($tenant['address']); ?>',
-                                '<?php echo $tenant['room_number']; ?>',
+                                '<?php echo !empty($tenant['room_id']) ? $tenant['room_id'] : ''; ?>',
                                 '<?php echo $tenant['move_in_date']; ?>',
                                 '<?php echo $tenant['status']; ?>'
                             )">Edit</button>
-                        <button class="delete-btn" onclick="confirmDelete(<?php echo $tenant['tenant_id']; ?>)">Delete</button>
+                        <button class="delete-btn" onclick="confirmDelete(<?php echo $tenant['tenant_id']; ?>)">Remove</button>
                     </div>
                 </td>
             </tr>
@@ -222,46 +223,45 @@ $rooms_query = $conn->query("SELECT room_id, room_number FROM rooms WHERE status
     <div class="modal-content">
         <span class="close" onclick="closeTenantModal()">&times;</span>
         <h2>Add New Tenant</h2>
-<form method="POST" action="">
-    <input type="hidden" name="add_tenant" value="1">
+        <form method="POST" action="">
+            <input type="hidden" name="add_tenant" value="1">
 
-    <label>Full Name</label>
-    <input type="text" name="full_name" placeholder="Enter tenant's full name" required>
+            <label>Full Name</label>
+            <input type="text" name="full_name" placeholder="Enter tenant's full name" required>
 
-    <label>Contact Number</label>
-    <input type="text" name="contact_number" placeholder="e.g. 09XXXXXXXXX">
+            <label>Contact Number</label>
+            <input type="text" name="contact_number" placeholder="e.g. 09XXXXXXXXX">
 
-    <label>Email</label>
-    <input type="email" name="email" placeholder="e.g. tenant@email.com">
+            <label>Email</label>
+            <input type="email" name="email" placeholder="e.g. tenant@email.com">
 
-    <label>Address</label>
-    <input type="text" name="address" placeholder="Enter complete address">
+            <label>Address</label>
+            <input type="text" name="address" placeholder="Enter complete address">
 
-    <label>Room</label>
-    <select name="room_id">
-        <option value="">Select room</option>
-        <?php 
-        $rooms_query->data_seek(0); // Reset pointer
-        while ($room = $rooms_query->fetch_assoc()): ?>
-            <option value="<?php echo $room['room_id']; ?>">
-                Room <?php echo htmlspecialchars($room['room_number']); ?>
-            </option>
-        <?php endwhile; ?>
-    </select>
+            <label>Room</label>
+            <select name="room_id">
+                <option value="">Select room</option>
+                <?php 
+                $rooms_query->data_seek(0);
+                while ($room = $rooms_query->fetch_assoc()): ?>
+                    <option value="<?php echo $room['room_id']; ?>">
+                        Room <?php echo htmlspecialchars($room['room_number']); ?>
+                    </option>
+                <?php endwhile; ?>
+            </select>
 
-    <label>Move-in Date</label>
-    <input type="date" name="move_in_date" placeholder="Select move-in date">
+            <label>Move-in Date</label>
+            <input type="date" name="move_in_date" placeholder="Select move-in date">
 
-    <label>Status</label>
-    <select name="status" required>
-        <option value="" disabled selected>Select status</option>
-        <option value="Active">Active</option>
-        <option value="Inactive">Inactive</option>
-    </select>
+            <label>Status</label>
+            <select name="status" required>
+                <option value="" disabled selected>Select status</option>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+            </select>
 
-    <button type="submit">Add Tenant</button>
-</form>
-
+            <button type="submit">Add Tenant</button>
+        </form>
     </div>
 </div>
 
@@ -286,8 +286,8 @@ $rooms_query = $conn->query("SELECT room_id, room_number FROM rooms WHERE status
             <select name="room_id" id="edit_room_id">
                 <option value="">Not Assigned</option>
                 <?php 
-                $rooms_query->data_seek(0); 
-                while ($room = $rooms_query->fetch_assoc()): ?>
+                $rooms_query_all->data_seek(0); 
+                while ($room = $rooms_query_all->fetch_assoc()): ?>
                     <option value="<?php echo $room['room_id']; ?>">
                         Room <?php echo htmlspecialchars($room['room_number']); ?>
                     </option>
@@ -309,17 +309,25 @@ $rooms_query = $conn->query("SELECT room_id, room_number FROM rooms WHERE status
 function openTenantModal() { document.getElementById('tenantModal').style.display = 'block'; }
 function closeTenantModal() { document.getElementById('tenantModal').style.display = 'none'; }
 
-function openEditTenantModal(id, full_name, contact, email, address, room, move_in, status) {
+function openEditTenantModal(id, full_name, contact, email, address, room_id, move_in, status) {
     document.getElementById('edit_tenant_id').value = id;
     document.getElementById('edit_full_name').value = full_name;
     document.getElementById('edit_contact_number').value = contact;
     document.getElementById('edit_email').value = email;
     document.getElementById('edit_address').value = address;
-    document.getElementById('edit_room_id').value = room;
+    
+    // Set the room dropdown to the tenant's current room_id
+    if (room_id && room_id !== '') {
+        document.getElementById('edit_room_id').value = room_id;
+    } else {
+        document.getElementById('edit_room_id').value = "";
+    }
+    
     document.getElementById('edit_move_in_date').value = move_in;
     document.getElementById('edit_status').value = status;
     document.getElementById('editTenantModal').style.display = 'block';
 }
+
 function closeEditTenantModal() { document.getElementById('editTenantModal').style.display = 'none'; }
 
 function confirmDelete(id) {

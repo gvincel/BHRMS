@@ -81,7 +81,7 @@ if (isset($_GET['delete_id'])) {
     $delete_stmt->bind_param("i", $delete_id);
 
     if ($delete_stmt->execute()) {
-        $message = "Room deleted successfully!";
+        $message = "Room removed successfully!";
         $message_type = "success";
     } else {
         $message = "Error deleting room!";
@@ -158,7 +158,7 @@ $rooms_query = $conn->query("SELECT * FROM rooms ORDER BY room_number");
     <li><a href="transaction.php"><i class="fas fa-list-alt"></i> Transaction Records</a></li>
     <li><a href="mainten.php"><i class="fas fa-tools"></i> Maintenance</a></li>
     <li><a href="reports.php"><i class="fas fa-file-alt"></i> Reports</a></li>
-    <li><a href="expenses.php"><i class="fas fa-receipt"></i> Expenses</a></li>
+    <li><a href="expenses.php"><i class="fas fa-file-invoice-dollar"></i> Expenses</a></li>
     <li><a href="settings.php"><i class="fas fa-cog"></i> Settings</a></li>
     <li class="logout"><a href="logout.php"><i class="fas fa-right-from-bracket"></i> Logout</a></li>
 </ul>
@@ -217,7 +217,7 @@ $rooms_query = $conn->query("SELECT * FROM rooms ORDER BY room_number");
                             <?php echo $room['monthly_rent']; ?>,
                             '<?php echo $room['status']; ?>'
                         )">Edit</button>
-                        <button class="delete-btn" onclick="confirmDelete(<?php echo $room['room_id']; ?>)">Delete</button>
+                        <button class="delete-btn" onclick="confirmDelete(<?php echo $room['room_id']; ?>)">Remove</button>
                     </div>
                 </td>
             </tr>
@@ -251,7 +251,7 @@ $rooms_query = $conn->query("SELECT * FROM rooms ORDER BY room_number");
         </select>
         
         <label>Capacity</label>
-        <input type="number" name="capacity" placeholder="Enter capacity" min="1" required>
+        <input type="number" name="capacity" placeholder="Enter capacity" min="1" max="6" required>
         
         <label>Monthly Rent</label>
         <input type="number" name="monthly_rent" placeholder="Enter price" step="0.01" required>
@@ -288,7 +288,7 @@ $rooms_query = $conn->query("SELECT * FROM rooms ORDER BY room_number");
         </select>
         
         <label>Capacity</label>
-        <input type="number" name="capacity" id="edit_capacity" min="1" required>
+        <input type="number" name="capacity" id="edit_capacity" min="1" max="6" required>
         
         <label>Monthly Rent</label>
         <input type="number" name="monthly_rent" id="edit_monthly_rent" step="0.01" required>

@@ -155,7 +155,7 @@ $maintenance_summary_query = $conn->query("
         </li>
         <li>
             <a href="expenses.php">
-                <i class="fas fa-receipt"></i> Expenses
+                <i class="fas fa-file-invoice-dollar"></i> Expenses
             </a>
         </li>
         <li>

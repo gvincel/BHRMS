@@ -138,7 +138,7 @@ $expenses_query = $conn->query("SELECT * FROM expenses ORDER BY expense_date DES
             <li><a href="transaction.php"><i class="fas fa-list-alt"></i> Transaction Records</a></li>
             <li><a href="mainten.php"><i class="fas fa-tools"></i> Maintenance</a></li>
             <li><a href="reports.php"><i class="fas fa-file-alt"></i> Reports</a></li>
-            <li class="active"><a href="expenses.php"><i class="fas fa-receipt"></i> Expenses</a></li>
+            <li class="active"><a href="expenses.php"><i class="fas fa-file-invoice-dollar"></i> Expenses</a></li>
             <li><a href="settings.php"><i class="fas fa-cog"></i> Settings</a></li>
             <li class="logout"><a href="logout.php"><i class="fas fa-right-from-bracket"></i> Logout</a></li>
         </ul>

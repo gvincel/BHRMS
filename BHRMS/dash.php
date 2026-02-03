@@ -12,8 +12,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_all_reminders'])
 
     $conn->query("
         UPDATE payments 
-        SET remarks = 'pending - reminder sent'
-        WHERE remarks LIKE '%pending%' OR remarks IS NULL
+        SET remarks = 'partial - reminder sent'
+        WHERE remarks LIKE '%partial%' OR remarks IS NULL
     ");
 
     header("Location: dash.php");
@@ -38,11 +38,11 @@ $income_query = $conn->query("
 $monthly_income = $income_query->fetch_assoc()['monthly_income'];
 
 $pending_query = $conn->query("
-    SELECT COUNT(*) as pending_payments 
+    SELECT COUNT(*) as partial_payments 
     FROM payments 
-    WHERE remarks LIKE '%pending%' OR remarks IS NULL
+    WHERE remarks LIKE '%partial%' OR remarks IS NULL
 ");
-$pending_payments = $pending_query->fetch_assoc()['pending_payments'];
+$partial_payments = $pending_query->fetch_assoc()['partial_payments'];
 
 $recent_payments_query = $conn->query("
     SELECT 
@@ -53,8 +53,9 @@ $recent_payments_query = $conn->query("
         p.payment_date,
         CASE 
             WHEN p.remarks LIKE '%paid%' THEN 'Paid'
-            WHEN p.remarks LIKE '%pending%' OR p.remarks IS NULL THEN 'Pending'
-            ELSE 'Unknown'
+            WHEN p.remarks LIKE '%partial%' THEN 'Partial'
+            WHEN p.remarks IS NULL THEN 'Partial'
+            ELSE p.remarks
         END AS status
     FROM payments p
     LEFT JOIN tenants t ON p.tenant_id = t.tenant_id
@@ -117,6 +118,10 @@ while ($row = $recent_payments_query->fetch_assoc()) {
 .profile-name {
     font-weight: 500;
 }
+
+/* Status styles */
+.paid { color: #10b981; font-weight: bold; }
+.partial { color: #f59e0b; font-weight: bold; }
 </style>
 </head>
 
@@ -133,7 +138,7 @@ while ($row = $recent_payments_query->fetch_assoc()) {
         <li><a href="transaction.php"><i class="fas fa-list-alt"></i> Transaction Records</a></li>
         <li><a href="mainten.php"><i class="fas fa-tools"></i> Maintenance</a></li>
         <li><a href="reports.php"><i class="fas fa-file-alt"></i> Reports</a></li>
-        <li><a href="expenses.php"><i class="fas fa-receipt"></i> Expenses</a></li>
+        <li><a href="expenses.php"><i class="fas fa-file-invoice-dollar"></i> Expenses</a></li>
         <li class="logout"><a href="logout.php"><i class="fas fa-right-from-bracket"></i> Logout</a></li>
     </ul>
 </aside>
@@ -156,7 +161,8 @@ while ($row = $recent_payments_query->fetch_assoc()) {
             </button>
         </form>
         <div class="profile">
-            Zen (Admin)
+            <?php echo htmlspecialchars($_SESSION['full_name'] ?? 'Admin'); ?>
+            (<?php echo htmlspecialchars($_SESSION['role'] ?? 'Admin'); ?>)
         </div>
 
     </div>
@@ -166,7 +172,7 @@ while ($row = $recent_payments_query->fetch_assoc()) {
     <div class="card"><h3>Total Rooms</h3><p><?php echo $total_rooms; ?></p></div>
     <div class="card"><h3>Occupied Rooms</h3><p><?php echo $occupied_rooms; ?></p></div>
     <div class="card"><h3>Monthly Income</h3><p>₱<?php echo number_format($monthly_income, 2); ?></p></div>
-    <div class="card"><h3>Pending Payments</h3><p><?php echo $pending_payments; ?></p></div>
+    <div class="card"><h3>Partial Payments</h3><p><?php echo $partial_payments; ?></p></div>
 </section>
 
 <section class="table-section">

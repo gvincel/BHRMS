@@ -12,48 +12,58 @@ $message = '';
 $message_type = '';
 
 // ==========================
-// UPDATE PAYMENT
+// UPDATE PAYMENT STATUS (AJAX endpoint)
 // ==========================
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_payment'])) {
-
-    $payment_id     = (int)$_POST['payment_id'];
-    $amount         = (float)$_POST['amount'];
-    $payment_date   = $_POST['payment_date'];
-    $payment_method = trim($_POST['payment_method']);
-    $status         = trim($_POST['status']); // updated
-
-    $sql = "UPDATE payments 
-            SET amount = ?, payment_date = ?, payment_method = ?, remarks = ?
-            WHERE payment_id = ?";
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
+    $payment_id = (int)$_POST['payment_id'];
+    $new_status = trim($_POST['status']);
+    
+    // Update payment remarks
+    $sql = "UPDATE payments SET remarks = ? WHERE payment_id = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("dsssi", $amount, $payment_date, $payment_method, $status, $payment_id);
-
+    $stmt->bind_param("si", $new_status, $payment_id);
+    
     if ($stmt->execute()) {
-        $message = "Payment updated successfully!";
-        $message_type = "success";
+        echo json_encode(['success' => true, 'message' => 'Status updated successfully']);
     } else {
-        $message = "Failed to update payment!";
+        echo json_encode(['success' => false, 'message' => 'Error updating status']);
+    }
+    $stmt->close();
+    exit();
+}
+
+// ==========================
+// ADD PAYMENT
+// ==========================
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_payment'])) {
+    $tenant_id = (int)$_POST['tenant_id'];
+    $amount = (float)$_POST['amount'];
+    $payment_date = $_POST['payment_date'];
+    $payment_method = trim($_POST['payment_method']);
+    $status = trim($_POST['status']);
+    
+    // Insert new payment
+    $sql = "INSERT INTO payments (tenant_id, amount, payment_date, payment_method, remarks) 
+            VALUES (?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("idsss", $tenant_id, $amount, $payment_date, $payment_method, $status);
+    
+    if ($stmt->execute()) {
+        $message = "Payment added successfully!";
+        $message_type = "success";
+        header("Location: payment.php?message=" . urlencode($message) . "&type=" . $message_type);
+        exit();
+    } else {
+        $message = "Error adding payment: " . $conn->error;
         $message_type = "error";
     }
     $stmt->close();
 }
 
-// ==========================
-// DELETE PAYMENT
-// ==========================
-if (isset($_GET['delete_id'])) {
-    $delete_id = (int)$_GET['delete_id'];
-    $stmt = $conn->prepare("DELETE FROM payments WHERE payment_id = ?");
-    $stmt->bind_param("i", $delete_id);
-
-    if ($stmt->execute()) {
-        $message = "Payment deleted successfully!";
-        $message_type = "success";
-    } else {
-        $message = "Error deleting payment!";
-        $message_type = "error";
-    }
-    $stmt->close();
+// Check for message from URL
+if (isset($_GET['message'])) {
+    $message = urldecode($_GET['message']);
+    $message_type = $_GET['type'] ?? 'info';
 }
 
 // ==========================
@@ -67,16 +77,24 @@ $payments_query = $conn->query("
         p.amount,
         p.payment_date,
         p.payment_method,
-        p.remarks AS status,
         CASE 
-            WHEN p.remarks LIKE '%Paid%' THEN 'Paid'
-            WHEN p.remarks LIKE '%Pending%' OR p.remarks IS NULL THEN 'Pending'
-            ELSE 'Pending'
-        END as display_status
+            WHEN p.remarks LIKE '%paid%' THEN 'Paid'
+            WHEN p.remarks LIKE '%partial%' THEN 'Partial'
+            WHEN p.remarks IS NULL THEN 'Partial'
+            ELSE 'Partial'
+        END as status
     FROM payments p
     LEFT JOIN tenants t ON p.tenant_id = t.tenant_id
     LEFT JOIN rooms r ON t.room_id = r.room_id
     ORDER BY p.payment_date DESC, p.payment_id DESC
+");
+
+// Fetch tenants for the add payment form
+$tenants_query = $conn->query("
+    SELECT t.tenant_id, t.full_name, r.room_number 
+    FROM tenants t 
+    LEFT JOIN rooms r ON t.room_id = r.room_id 
+    ORDER BY t.full_name
 ");
 ?>
 <!DOCTYPE html>
@@ -89,26 +107,33 @@ $payments_query = $conn->query("
 
 <style>
 .paid { color: #10b981; font-weight: bold; }
-.pending { color: #b91c1c; font-weight: bold; }
+.partial { color: #f59e0b; font-weight: bold; }
 
-/* ACTION BUTTONS */
-.edit-btn, .delete-btn {
+/* STATUS BUTTONS */
+.status-btn {
     padding: 6px 12px;
-    font-size: 14px;
-    border: none;
     border-radius: 6px;
+    border: none;
     cursor: pointer;
-    color: #fff;
+    font-weight: bold;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    min-width: 80px;
 }
-.edit-btn { background-color: #2563eb; }
-.edit-btn:hover { background-color: #1e40af; }
-.delete-btn { background-color: #dc2626; }
-.delete-btn:hover { background-color: #b91c1c; }
 
-.action-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 5px;
+.status-paid {
+    background-color: #10b981;
+    color: white;
+}
+
+.status-partial {
+    background-color: #f59e0b;
+    color: white;
+}
+
+.status-btn:hover {
+    opacity: 0.9;
+    transform: scale(1.05);
 }
 
 .message {
@@ -162,6 +187,21 @@ $payments_query = $conn->query("
     background-color: #1e40af;
 }
 
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
 </style>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
@@ -179,7 +219,7 @@ $payments_query = $conn->query("
     <li><a href="transaction.php"><i class="fas fa-list-alt"></i> Transaction Records</a></li>
     <li><a href="mainten.php"><i class="fas fa-tools"></i> Maintenance</a></li>
     <li><a href="reports.php"><i class="fas fa-file-alt"></i> Reports</a></li>
-    <li><a href="expenses.php"><i class="fas fa-receipt"></i> Expenses</a></li>
+    <li><a href="expenses.php"><i class="fas fa-file-invoice-dollar"></i> Expenses</a></li>
     <li><a href="settings.php"><i class="fas fa-cog"></i> Settings</a></li>
     <li class="logout"><a href="logout.php"><i class="fas fa-right-from-bracket"></i> Logout</a></li>
 </ul>
@@ -200,6 +240,10 @@ $payments_query = $conn->query("
 </div>
 <?php endif; ?>
 
+<div class="add-btn-container">
+    <button class="add-btn" onclick="openModal()">+ Add Payment</button>
+</div>
+
 <section class="table-section">
 <h2>Payment Records</h2>
 
@@ -212,7 +256,6 @@ $payments_query = $conn->query("
     <th>Payment Date</th>
     <th>Payment Method</th>
     <th>Status</th>
-    <th>Action</th>
 </tr>
 </thead>
 <tbody>
@@ -225,30 +268,17 @@ $payments_query = $conn->query("
 <td>₱<?php echo number_format($payment['amount'], 2); ?></td>
 <td><?php echo date('Y-m-d', strtotime($payment['payment_date'])); ?></td>
 <td><?php echo htmlspecialchars($payment['payment_method']); ?></td>
-<td class="<?php echo strtolower($payment['display_status']); ?>">
-<?php echo $payment['display_status']; ?>
-</td>
-
 <td>
-<div class="action-buttons">
-<button class="edit-btn" onclick="editPayment(
-<?php echo $payment['payment_id']; ?>,
-<?php echo $payment['amount']; ?>,
-'<?php echo $payment['payment_date']; ?>',
-'<?php echo htmlspecialchars($payment['payment_method']); ?>',
-'<?php echo $payment['status']; ?>'
-)">Edit</button>
-
-<button class="delete-btn" onclick="confirmDelete(<?php echo $payment['payment_id']; ?>)">
-Delete
-</button>
-</div>
+    <button class="status-btn status-<?php echo strtolower($payment['status']); ?>" 
+            onclick="toggleStatus(this, <?php echo $payment['payment_id']; ?>)">
+        <?php echo $payment['status']; ?>
+    </button>
 </td>
 </tr>
 <?php endwhile; ?>
 <?php else: ?>
 <tr>
-<td colspan="7" style="text-align:center;">No payment records found</td>
+<td colspan="6" style="text-align:center;">No payment records found</td>
 </tr>
 <?php endif; ?>
 
@@ -258,59 +288,129 @@ Delete
 </main>
 </div>
 
-<!-- EDIT PAYMENT MODAL -->
-<div id="editModal" class="modal">
+<!-- ADD PAYMENT MODAL -->
+<div id="paymentModal" class="modal">
 <div class="modal-content">
-<span class="close" onclick="closeEditModal()">&times;</span>
-<h2>Edit Payment</h2>
+<span class="close" onclick="closeModal()">&times;</span>
+<h2>Add New Payment</h2>
 
 <form method="POST">
-<input type="hidden" name="update_payment" value="1">
-<input type="hidden" name="payment_id" id="edit_payment_id">
+<input type="hidden" name="add_payment" value="1">
 
-<label>Amount</label>
-<input type="number" name="amount" id="edit_amount" step="0.01" required>
-
-<label>Payment Date</label>
-<input type="date" name="payment_date" id="edit_date" required>
-
-<label>Payment Method</label>
-<input type="text" name="payment_method" id="edit_method" required>
-
-<label>Status</label>
-<select name="status" id="edit_status" required>
-    <option value="Paid">Paid</option>
-    <option value="Pending">Pending</option>
+<label>Tenant</label>
+<select name="tenant_id" id="tenant_id" required>
+    <option value="">Select Tenant</option>
+    <?php if ($tenants_query->num_rows > 0): ?>
+        <?php while ($tenant = $tenants_query->fetch_assoc()): ?>
+            <option value="<?php echo $tenant['tenant_id']; ?>">
+                <?php echo htmlspecialchars($tenant['full_name']) . ' - Room ' . htmlspecialchars($tenant['room_number']); ?>
+            </option>
+        <?php endwhile; ?>
+    <?php endif; ?>
 </select>
 
-<button type="submit">Update Payment</button>
+<label>Amount</label>
+<input type="number" name="amount" step="0.01" placeholder="Enter amount" required>
+
+<label>Payment Date</label>
+<input type="date" name="payment_date" required value="<?php echo date('Y-m-d'); ?>">
+
+<label>Payment Method</label>
+<select name="payment_method" required>
+    <option value="">Select Method</option>
+    <option value="Cash">Cash</option>
+</select>
+
+<label>Status</label>
+<select name="status" required>
+    <option value="">Select Status</option>
+    <option value="Partial">Partial</option>
+    <option value="Paid">Paid</option>
+</select>
+
+<button type="submit">Add Payment</button>
 </form>
 </div>
 </div>
 
 <script>
-function editPayment(id, amount, date, method, status) {
-    document.getElementById('edit_payment_id').value = id;
-    document.getElementById('edit_amount').value = amount;
-    document.getElementById('edit_date').value = date;
-    document.getElementById('edit_method').value = method;
-    document.getElementById('edit_status').value = status;
-    document.getElementById('editModal').style.display = 'block';
+function toggleStatus(button, paymentId) {
+    // Get current status
+    let currentStatus = button.textContent.trim();
+    
+    // Toggle between Partial and Paid only
+    let newStatus = currentStatus === 'Paid' ? 'Partial' : 'Paid';
+    
+    // Show loading state
+    const originalText = button.textContent;
+    button.textContent = 'Updating...';
+    button.disabled = true;
+    
+    // Send AJAX request to update status
+    fetch(window.location.href, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `update_status=1&payment_id=${paymentId}&status=${newStatus}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Update button text
+            button.textContent = newStatus;
+            
+            // Update button class
+            button.className = 'status-btn status-' + newStatus.toLowerCase();
+            
+            // Show success message
+            showMessage('Status updated successfully!', 'success');
+        } else {
+            button.textContent = originalText;
+            showMessage('Failed to update status', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        button.textContent = originalText;
+        showMessage('Network error. Please try again.', 'error');
+    })
+    .finally(() => {
+        button.disabled = false;
+    });
 }
 
-function closeEditModal() {
-    document.getElementById('editModal').style.display = 'none';
+function showMessage(text, type) {
+    // Remove existing messages
+    const existingMsg = document.querySelector('.message');
+    if (existingMsg) existingMsg.remove();
+    
+    // Create new message
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${type}`;
+    messageDiv.textContent = text;
+    
+    // Insert message
+    const header = document.querySelector('.topbar');
+    header.parentNode.insertBefore(messageDiv, header.nextSibling);
+    
+    // Auto remove after 3 seconds
+    setTimeout(() => {
+        messageDiv.remove();
+    }, 3000);
 }
 
-function confirmDelete(id) {
-    if (confirm('Are you sure you want to delete this payment?')) {
-        window.location.href = 'payment.php?delete_id=' + id;
-    }
+function openModal() {
+    document.getElementById('paymentModal').style.display = 'block';
 }
 
-window.onclick = function(e) {
-    if (e.target === document.getElementById('editModal')) {
-        closeEditModal();
+function closeModal() {
+    document.getElementById('paymentModal').style.display = 'none';
+}
+
+window.onclick = function(event) {
+    if (event.target == document.getElementById('paymentModal')) {
+        closeModal();
     }
 }
 </script>

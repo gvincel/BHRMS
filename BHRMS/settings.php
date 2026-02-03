@@ -212,7 +212,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['change_password'])) {
         </li>
         <li>
             <a href="expenses.php">
-                <i class="fas fa-receipt"></i> Expenses
+                <i class="fas fa-file-invoice-dollar"></i> Expenses
             </a>
         </li>
         <li class="active">
